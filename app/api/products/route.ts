@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { dbConnect } from "@/lib/dbConnect";
+import Product from "@/models/product";
 
 // POST /api/products
 export async function POST(req: NextRequest) {
+  await dbConnect();
+
   try {
     const { name, price } = await req.json();
 
-    // Ensure valid data
     if (!name || price === undefined) {
       return NextResponse.json(
         { error: "Product name and price are required" },
@@ -14,12 +16,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Create product
-    const product = await prisma.product.create({
-      data: {
-        name,
-        price: parseFloat(price),
-      },
+    const product = await Product.create({
+      name,
+      price: parseFloat(price),
     });
 
     return NextResponse.json(product);
@@ -34,8 +33,10 @@ export async function POST(req: NextRequest) {
 
 // GET /api/products
 export async function GET() {
+  await dbConnect();
+
   try {
-    const products = await prisma.product.findMany();
+    const products = await Product.find();
     return NextResponse.json(products);
   } catch (error) {
     console.error("Error fetching products:", error);

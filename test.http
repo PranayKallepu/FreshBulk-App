@@ -10,7 +10,7 @@ POST {{rootUrl}}/api/products
 Content-Type: application/json
 
 {
-    "name": "Apple",
+    "name": "sample",
     "price": 25
 }
 
@@ -18,7 +18,7 @@ Content-Type: application/json
 
 ###
 // 3.update product
-PUT {{rootUrl}}/api/products/1
+PUT {{rootUrl}}/api/products/6805090ef44c826a2ea5bc69
 Content-Type: application/json
 
 {
@@ -28,7 +28,7 @@ Content-Type: application/json
 
 ###
 // 4.delete product
-DELETE {{rootUrl}}/api/products/1
+DELETE {{rootUrl}}/api/products/68050936f44c826a2ea5bc6d
 
 ###
 // 5.get orders
@@ -45,7 +45,7 @@ Content-Type: application/json
   "deliveryAddress": "123, Mumbai",
   "items": [
     {
-      "productId": 2,
+      "productId": "6805090ef44c826a2ea5bc69",
       "quantity": 2
     }
   ]
@@ -54,11 +54,11 @@ Content-Type: application/json
 
 ###
 // 7. get order
-GET {{rootUrl}}/api/orders/1
+GET {{rootUrl}}/api/orders/68050996f44c826a2ea5bc71
 
 ###
 // 8.update order
-PUT {{rootUrl}}/api/orders/1
+PUT {{rootUrl}}/api/orders/68050996f44c826a2ea5bc71
 Content-Type: application/json
 
 {

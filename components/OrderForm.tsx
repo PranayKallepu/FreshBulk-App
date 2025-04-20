@@ -8,13 +8,13 @@ import toast from "react-hot-toast";
 
 // Define types
 type Product = {
-  id: number;
+  _id: string;
   name: string;
   price: number;
 };
 
 // type OrderItem = {
-//   productId: number;
+//   productId: string;
 //   name: string;
 //   quantity: number;
 //   price: number;
@@ -36,7 +36,7 @@ const OrderForm = ({ initialProduct, products }: Props) => {
     buyerContact: "",
     deliveryAddress: "",
     items: [] as {
-      productId: number;
+      productId: string;
       name: string;
       quantity: number;
       price: number;
@@ -78,7 +78,7 @@ const OrderForm = ({ initialProduct, products }: Props) => {
     if (initialProduct) {
       setForm((prev) => {
         const exists = prev.items.find(
-          (item) => item.productId === initialProduct.id
+          (item) => item.productId === initialProduct._id
         );
         if (exists) return prev;
         return {
@@ -86,7 +86,7 @@ const OrderForm = ({ initialProduct, products }: Props) => {
           items: [
             ...prev.items,
             {
-              productId: initialProduct.id,
+              productId: initialProduct._id,
               name: initialProduct.name,
               price: initialProduct.price,
               quantity: 1,
@@ -108,13 +108,13 @@ const OrderForm = ({ initialProduct, products }: Props) => {
 
   const handleSelectToggle = (product: Product) => {
     setForm((prev) => {
-      const existing = selected.get(product.id);
+      const existing = selected.get(product._id);
       const items = existing
-        ? prev.items.filter((item) => item.productId !== product.id)
+        ? prev.items.filter((item) => item.productId !== product._id)
         : [
             ...prev.items,
             {
-              productId: product.id,
+              productId: product._id,
               name: product.name,
               quantity: 1,
               price: product.price,
@@ -124,7 +124,7 @@ const OrderForm = ({ initialProduct, products }: Props) => {
     });
   };
 
-  const handleQuantityChange = (id: number, quantity: number) => {
+  const handleQuantityChange = (id: string, quantity: number) => {
     if (quantity < 1 || quantity > 10) return;
     setForm((prev) => {
       const updatedItems = prev.items.map((item) =>
@@ -306,11 +306,12 @@ const OrderForm = ({ initialProduct, products }: Props) => {
                   <div className="max-h-[300px] overflow-y-auto pr-2">
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                       {products.map((product) => {
-                        const isSelected = selected.has(product.id);
-                        const item = selected.get(product.id);
+                        console.log(product._id);
+                        const isSelected = selected.has(product._id);
+                        const item = selected.get(product._id);
                         return (
                           <div
-                            key={product.id}
+                            key={product._id}
                             className="flex flex-col border bg-gray-100 rounded p-2"
                           >
                             <div className="flex flex-col items-center">
@@ -339,7 +340,7 @@ const OrderForm = ({ initialProduct, products }: Props) => {
                                       value={item?.quantity || 1}
                                       onChange={(e) =>
                                         handleQuantityChange(
-                                          product.id,
+                                          product._id,
                                           parseInt(e.target.value || "1")
                                         )
                                       }

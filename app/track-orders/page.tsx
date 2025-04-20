@@ -8,11 +8,11 @@ interface OrderItem {
   name: string;
   price: number;
   quantity: number;
-  productId: number;
+  productId: string;
 }
 
 interface Order {
-  id: number;
+  _id: string;
   buyerName: string;
   buyerContact: string;
   deliveryAddress: string;
@@ -23,6 +23,7 @@ interface Order {
 
 export default function OrderTracking() {
   const [orders, setOrders] = useState<Order[]>([]);
+  console.log(orders);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [searchId, setSearchId] = useState<string>("");
   const [buyerName, setBuyerName] = useState<string | null>(null);
@@ -60,21 +61,11 @@ export default function OrderTracking() {
     }
   };
 
-  const handleSearch = (id: string) => {
-    setSearchId(id);
-    if (id.trim() === "") {
-      setFilteredOrders(orders);
-    } else {
-      const numId = parseInt(id);
-      if (!isNaN(numId)) {
-        setFilteredOrders(orders.filter((order) => order.id === numId));
-      } else {
-        setFilteredOrders([]);
-      }
-    }
+  const handleSearch = (_id: string) => {
+    setSearchId(_id);
   };
 
-  const handleCancelOrder = async (id: number) => {
+  const handleCancelOrder = async (id: string) => {
     const confirmed = window.confirm(
       "Are you sure you want to cancel this order?"
     );
@@ -82,8 +73,8 @@ export default function OrderTracking() {
     setCancelLaoding(true);
     try {
       await axios.delete(`/api/orders/${id}`);
-      setOrders((prev) => prev.filter((order) => order.id !== id));
-      setFilteredOrders((prev) => prev.filter((order) => order.id !== id));
+      setOrders((prev) => prev.filter((order) => order._id !== id));
+      setFilteredOrders((prev) => prev.filter((order) => order._id !== id));
       toast.success("Order canceled!");
     } catch (err) {
       console.error("Cancel error:", err);
@@ -175,7 +166,7 @@ export default function OrderTracking() {
             <div className="space-y-4">
               {filteredOrders.map((order) => (
                 <div
-                  key={order.id}
+                  key={order._id}
                   className="bg-gray-50 border border-gray-200 rounded-2xl p-4"
                 >
                   <div className="flex justify-between items-center">
@@ -186,16 +177,17 @@ export default function OrderTracking() {
                           month: "short",
                           year: "numeric",
                         })}{" "}
-                        &bull; #{order.id}
+                        &bull;
                       </span>
                       {order.status.toLowerCase() === "pending" && (
                         <button
-                          onClick={() => handleCancelOrder(order.id)}
+                          onClick={() => handleCancelOrder(order._id)}
                           className="ml-4 text-red-600 text-sm underline hover:text-red-800 cursor-pointer"
                         >
                           {cancelLoading ? "Canceling..." : "Cancel"}
                         </button>
                       )}
+                      <p>#{order._id}</p>
                     </div>
                     <span
                       className={`font-medium ${getStatusColor(order.status)}`}

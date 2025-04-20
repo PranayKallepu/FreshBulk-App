@@ -8,7 +8,7 @@ import AddProductForm from "@/components/AddProductForm";
 import toast from "react-hot-toast";
 
 interface Product {
-  id: number;
+  _id: string;
   name: string;
   price: number;
 }
@@ -18,14 +18,14 @@ const ProductsManage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingError, setLoadingError] = useState<boolean>(false);
 
-  const [editingProductId, setEditingProductId] = useState<number | null>(null);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState<string>("");
   const [editingPrice, setEditingPrice] = useState<string>("");
 
-  const [updatingProductId, setUpdatingProductId] = useState<number | null>(
+  const [updatingProductId, setUpdatingProductId] = useState<string | null>(
     null
   );
-  const [deletingProductId, setDeletingProductId] = useState<number | null>(
+  const [deletingProductId, setDeletingProductId] = useState<string | null>(
     null
   );
 
@@ -50,7 +50,7 @@ const ProductsManage = () => {
   };
 
   const startEditing = (product: Product): void => {
-    setEditingProductId(product.id);
+    setEditingProductId(product._id);
     setEditingName(product.name);
     setEditingPrice(product.price.toString());
   };
@@ -61,7 +61,7 @@ const ProductsManage = () => {
     setEditingPrice("");
   };
 
-  const saveEdit = async (id: number): Promise<void> => {
+  const saveEdit = async (id: string): Promise<void> => {
     if (!editingName.trim() || isNaN(parseInt(editingPrice))) {
       toast.error("Please enter a valid name and price.");
       return;
@@ -85,7 +85,7 @@ const ProductsManage = () => {
     }
   };
 
-  const deleteProduct = async (id: number): Promise<void> => {
+  const deleteProduct = async (id: string): Promise<void> => {
     const confirmDelete = confirm(
       "Are you sure you want to delete this product?"
     );
@@ -94,7 +94,7 @@ const ProductsManage = () => {
     setDeletingProductId(id);
     try {
       await axios.delete(`/api/products/${id}`);
-      setProducts((prev) => prev.filter((p) => p.id !== id));
+      setProducts((prev) => prev.filter((p) => p._id !== id));
       toast.success("Product deleted successfully!");
     } catch (err: unknown) {
       const error = err as AxiosError;
@@ -132,10 +132,10 @@ const ProductsManage = () => {
         <div className="space-y-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-2">
           {products.map((product) => (
             <div
-              key={product.id}
+              key={product._id}
               className="p-4 rounded shadow bg-gray-100 h-35"
             >
-              {editingProductId === product.id ? (
+              {editingProductId === product._id ? (
                 <div>
                   <input
                     type="text"
@@ -183,10 +183,10 @@ const ProductsManage = () => {
                     </button>
                     <button
                       className="bg-red-300 px-3 py-1 rounded w-full cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
-                      onClick={() => deleteProduct(product.id)}
-                      disabled={deletingProductId === product.id}
+                      onClick={() => deleteProduct(product._id)}
+                      disabled={deletingProductId === product._id}
                     >
-                      {deletingProductId === product.id
+                      {deletingProductId === product._id
                         ? "Deleting..."
                         : "Delete"}
                     </button>

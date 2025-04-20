@@ -1,22 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { dbConnect } from "@/lib/dbConnect";
+import Product from "@/models/product";
 
-// Update product /api/products/:productId
+// PUT /api/products/:productId
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ productId: string }> }
+  { params }: { params: { productId: string } }
 ) {
-  const { productId } = await params;
-  const id = parseInt(productId);
+  await dbConnect();
 
-  if (isNaN(id)) {
-    return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
-  }
+  const { productId } = params;
+  const { name, price } = await req.json();
 
-  const body = await req.json();
-  const { name, price } = body;
-
-  if (!name || !price) {
+  if (!name || price === undefined) {
     return NextResponse.json(
       { error: "Missing name or price" },
       { status: 400 }
@@ -24,16 +20,15 @@ export async function PUT(
   }
 
   try {
-    const existing = await prisma.product.findUnique({ where: { id } });
+    const updated = await Product.findByIdAndUpdate(
+      productId,
+      { name, price: parseFloat(price) },
+      { new: true }
+    );
 
-    if (!existing) {
+    if (!updated) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
-
-    const updated = await prisma.product.update({
-      where: { id },
-      data: { name, price: parseFloat(price) },
-    });
 
     return NextResponse.json({ updated, message: "Product updated" });
   } catch (error) {
@@ -45,35 +40,21 @@ export async function PUT(
   }
 }
 
-// Delete product /api/products/:productId
+// DELETE /api/products/:productId
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ productId: string }> }
+  { params }: { params: { productId: string } }
 ) {
-  const { productId } = await params;
-  const id = parseInt(productId);
+  await dbConnect();
 
-  if (!id) {
-    return NextResponse.json(
-      { error: "Missing product productId" },
-      { status: 400 }
-    );
-  }
-
-  if (isNaN(id)) {
-    return NextResponse.json({ error: "Invalid productId" }, { status: 400 });
-  }
+  const { productId } = params;
 
   try {
-    const existingProduct = await prisma.product.findUnique({
-      where: { id },
-    });
+    const deleted = await Product.findByIdAndDelete(productId);
 
-    if (!existingProduct) {
+    if (!deleted) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
-
-    await prisma.product.delete({ where: { id } });
 
     return NextResponse.json({ message: "Product deleted successfully" });
   } catch (error) {

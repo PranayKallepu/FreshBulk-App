@@ -15,7 +15,7 @@ interface OrderItem {
 }
 
 interface Order {
-  id: number;
+  _id: string;
   buyerName: string;
   buyerContact: string;
   deliveryAddress: string;
@@ -30,7 +30,7 @@ const OrdersManagement: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
-  const [updatingOrderId, setUpdatingOrderId] = useState<number | null>(null);
+  const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [statusLoading, setStatusLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -53,15 +53,15 @@ const OrdersManagement: React.FC = () => {
   };
 
   const updateOrderStatus = async (
-    id: number,
+    _id: string,
     status: string
   ): Promise<void> => {
-    setUpdatingOrderId(id);
+    setUpdatingOrderId(_id);
     setStatusLoading(true);
     try {
-      await axios.put(`/api/orders/${id}`, { status });
+      await axios.put(`/api/orders/${_id}`, { status });
       setOrders((prev) =>
-        prev.map((order) => (order.id === id ? { ...order, status } : order))
+        prev.map((order) => (order._id === _id ? { ...order, status } : order))
       );
     } catch {
       setError(true);
@@ -75,7 +75,7 @@ const OrdersManagement: React.FC = () => {
   const filteredOrders = orders.filter(
     (order) =>
       (order.buyerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.id.toString().includes(searchTerm)) &&
+        order._id.toString().includes(searchTerm)) &&
       (!statusFilter || order.status === statusFilter)
   );
 
@@ -159,11 +159,11 @@ const OrdersManagement: React.FC = () => {
             <tbody>
               {paginatedOrders.map((order) => (
                 <tr
-                  key={order.id}
+                  key={order._id}
                   className="border-t hover:bg-gray-50 transition"
                 >
                   <td className="px-4 py-3 font-medium text-gray-800">
-                    #{order.id}
+                    #{order._id}
                   </td>
                   <td className="px-4 py-3">
                     <div className="font-medium">{order.buyerName}</div>
@@ -179,7 +179,7 @@ const OrdersManagement: React.FC = () => {
                     <ItemList items={order.items} />
                   </td>
                   <td className="px-4 py-3">
-                    {statusLoading && updatingOrderId === order.id ? (
+                    {statusLoading && updatingOrderId === order._id ? (
                       <BsThreeDots className="text-gray-500 animate-pulse w-5 h-5" />
                     ) : (
                       <span
@@ -195,9 +195,9 @@ const OrdersManagement: React.FC = () => {
                     <select
                       value={order.status}
                       onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        updateOrderStatus(order.id, e.target.value)
+                        updateOrderStatus(order._id, e.target.value)
                       }
-                      disabled={updatingOrderId === order.id}
+                      disabled={updatingOrderId === order._id}
                       className="border p-2 rounded-md text-sm bg-white focus:ring-2 focus:ring-blue-200"
                     >
                       {["Pending", "In Progress", "Delivered"].map((status) => (
