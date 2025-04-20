@@ -1,0 +1,66 @@
+@rootUrl = http://localhost:3000
+
+###
+// 1.get products
+GET {{rootUrl}}/api/products
+
+###
+// 2.create product
+POST {{rootUrl}}/api/products
+Content-Type: application/json
+
+{
+    "name": "Apple",
+    "price": 25
+}
+
+
+
+###
+// 3.update product
+PUT {{rootUrl}}/api/products/1
+Content-Type: application/json
+
+{
+    "name": "Apple",
+    "price": 25
+}
+
+###
+// 4.delete product
+DELETE {{rootUrl}}/api/products/1
+
+###
+// 5.get orders
+GET {{rootUrl}}/api/orders
+
+###
+// 6.create order
+POST {{rootUrl}}/api/orders
+Content-Type: application/json
+
+{
+  "buyerName": "Pranay",
+  "buyerContact": "9876543210",
+  "deliveryAddress": "123, Mumbai",
+  "items": [
+    {
+      "productId": 2,
+      "quantity": 2
+    }
+  ]
+}
+
+
+###
+// 7. get order
+GET {{rootUrl}}/api/orders/1
+
+###
+// 8.update order
+PUT {{rootUrl}}/api/orders/1
+Content-Type: application/json
+
+{
+  "status": "in progress"
+}
