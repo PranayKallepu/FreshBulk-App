@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Popup from "reactjs-popup";
 import { useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
+// import { Product } from "@/app/products/page";
 
 // Define types
 type Product = {

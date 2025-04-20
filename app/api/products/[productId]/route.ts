@@ -5,11 +5,11 @@ import Product from "@/models/product";
 // PUT /api/products/:productId
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
   await dbConnect();
 
-  const { productId } = params;
+  const { productId } = await params;
   const { name, price } = await req.json();
 
   if (!name || price === undefined) {
@@ -43,11 +43,11 @@ export async function PUT(
 // DELETE /api/products/:productId
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { productId: string } }
+  { params }: { params: Promise<{ productId: string }> }
 ) {
   await dbConnect();
 
-  const { productId } = params;
+  const { productId } = await params;
 
   try {
     const deleted = await Product.findByIdAndDelete(productId);

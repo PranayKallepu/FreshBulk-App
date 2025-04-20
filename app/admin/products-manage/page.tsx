@@ -151,11 +151,11 @@ const ProductsManage = () => {
                   />
                   <div className="flex space-x-2">
                     <button
-                      onClick={() => saveEdit(product.id)}
+                      onClick={() => saveEdit(product._id)}
                       className="bg-green-400 px-3 py-1 rounded text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
-                      disabled={updatingProductId === product.id}
+                      disabled={updatingProductId === product._id}
                     >
-                      {updatingProductId === product.id ? "Saving..." : "Save"}
+                      {updatingProductId === product._id ? "Saving..." : "Save"}
                     </button>
                     <button
                       onClick={cancelEditing}

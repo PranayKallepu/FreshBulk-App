@@ -7,25 +7,24 @@ import type { RootState, AppDispatch } from "@/store/store";
 import OrderForm from "@/components/OrderForm";
 import Loader from "@/components/Loader";
 
-interface Product {
-  id: number;
+// Match this with what's returned from MongoDB
+export interface Product {
+  _id: string;
   name: string;
   price: number;
 }
 
 export default function Products() {
-  //redux
   const dispatch = useDispatch<AppDispatch>();
-  //state
+
   const {
     items: products,
     loading,
     error,
   } = useSelector((state: RootState) => state.products);
+
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   console.log(selectedProduct);
-
-  // fetch products
   useEffect(() => {
     if (products.length === 0) {
       dispatch(fetchProducts());
@@ -54,11 +53,10 @@ export default function Products() {
         <p className="text-center text-gray-500">No products available.</p>
       ) : (
         <div className="max-h-[80vh] overflow-y-auto md:overflow-visible px-4">
-          {/* Product cards */}
           <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4 lg:ml-20 lg:mr-20">
-            {products.map((product: Product) => (
+            {products.map((product) => (
               <div
-                key={product.id}
+                key={product._id}
                 className="rounded-2xl p-4 shadow bg-gray-100"
               >
                 <h2 className="text-xl font-semibold mb-2">{product.name}</h2>

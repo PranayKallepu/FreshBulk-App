@@ -6,11 +6,11 @@ import Order from "@/models/order";
 // GET /api/orders/:orderId
 export async function GET(
   req: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   await dbConnect();
 
-  const { orderId } = params;
+  const { orderId } = await params;
 
   if (!orderId || orderId.length !== 24) {
     return NextResponse.json({ error: "Invalid order ID" }, { status: 400 });
@@ -34,7 +34,7 @@ export async function GET(
 // PUT /api/orders/:orderId
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   // Wait for params to resolve
   const { orderId } = await params;
@@ -78,11 +78,11 @@ export async function PUT(
 // DELETE /api/orders/:orderId
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   await dbConnect();
 
-  const { orderId } = params;
+  const { orderId } = await params;
 
   try {
     const deleted = await Order.findByIdAndDelete(orderId);
