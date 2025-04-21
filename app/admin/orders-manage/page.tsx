@@ -6,23 +6,7 @@ import Loader from "@/components/Loader";
 import { BsThreeDots } from "react-icons/bs";
 import ItemList from "@/components/ItemsList";
 
-interface OrderItem {
-  name: string;
-  price: number;
-  quantity: number;
-  productId: number;
-  totalPrice: number;
-}
-
-interface Order {
-  _id: string;
-  buyerName: string;
-  buyerContact: string;
-  deliveryAddress: string;
-  items: OrderItem[];
-  status: string;
-  createdAt: string;
-}
+import { Order } from "@/app/types";
 
 const ORDERS_PER_PAGE = 5;
 
@@ -35,6 +19,7 @@ const OrdersManagement: React.FC = () => {
   const [statusLoading, setStatusLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -95,6 +80,16 @@ const OrdersManagement: React.FC = () => {
         return "text-yellow-600";
       default:
         return "text-gray-500";
+    }
+  };
+
+  const handleCopy = async (id: string) => {
+    try {
+      await navigator.clipboard.writeText(id);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
     }
   };
 
@@ -163,8 +158,16 @@ const OrdersManagement: React.FC = () => {
                   className="border-t hover:bg-gray-50 transition"
                 >
                   <td className="px-4 py-3 font-medium text-gray-800">
-                    #{order._id}
+                    #{order._id.slice(0, 6)}...
+                    <button
+                      onClick={() => handleCopy(order._id)}
+                      className="bg-gray-200 border text-xs hover:underline focus:outline-none cursor-pointer ml-2"
+                      title="Click to copy full Order ID"
+                    >
+                      {copied ? "Copied!" : "Copy"}
+                    </button>
                   </td>
+
                   <td className="px-4 py-3">
                     <div className="font-medium">{order.buyerName}</div>
                     <div className="text-xs text-gray-500">

@@ -5,27 +5,9 @@ import { useRouter } from "next/navigation";
 import Popup from "reactjs-popup";
 import { useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
-// import { Product } from "@/app/products/page";
 
-// Define types
-type Product = {
-  _id: string;
-  name: string;
-  price: number;
-};
-
-// type OrderItem = {
-//   productId: string;
-//   name: string;
-//   quantity: number;
-//   price: number;
-// };
-
-type Props = {
-  initialProduct?: Product;
-  products: Product[];
-  onClose: () => void;
-};
+import type { Product } from "@/app/types";
+import type { Props } from "@/app/types";
 
 const OrderForm = ({ initialProduct, products }: Props) => {
   const [isEditingAddress, setIsEditingAddress] = useState(false);

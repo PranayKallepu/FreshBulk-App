@@ -7,12 +7,7 @@ import type { RootState, AppDispatch } from "@/store/store";
 import OrderForm from "@/components/OrderForm";
 import Loader from "@/components/Loader";
 
-// Match this with what's returned from MongoDB
-export interface Product {
-  _id: string;
-  name: string;
-  price: number;
-}
+import type { Product } from "../types";
 
 export default function Products() {
   const dispatch = useDispatch<AppDispatch>();
@@ -56,7 +51,7 @@ export default function Products() {
           <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4 lg:ml-20 lg:mr-20">
             {products.map((product) => (
               <div
-                key={product._id}
+                key={product.name}
                 className="rounded-2xl p-4 shadow bg-gray-100"
               >
                 <h2 className="text-xl font-semibold mb-2">{product.name}</h2>

@@ -111,7 +111,7 @@ export default function Navbar() {
             </Link>
           ))}
         </div>
-        <div className="flex flex-col items-center gap-4 mt-5">
+        <div className="flex flex-col items-center gap-4 mt-5 border-2">
           <SignedOut>
             <div className="md:px-4 md:py-3 px-1 py-1 bg-cyan-400 text-white rounded-lg text-center">
               <SignInButton>
